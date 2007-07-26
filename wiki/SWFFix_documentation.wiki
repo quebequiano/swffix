@@ -9,7 +9,7 @@ The A List Apart article Flash Embedding Cage Match [ http://www.alistapart.com/
 
 === STEP 1: Embed both Flash content and alternative content using standards compliant markup ===
 
-SWFFix' base markup uses the nested-objects method (with proprietary Internet Explorer conditional comments) [ http://www.alistapart.com/articles/flashembedcagematch/ ] to ensure the most optimal cross-browser support by means of markup only, and while being standards compliant and supporting alternative content [ http://www.swffix.org/testsuite/ ]:
+SWFFix' base markup uses the nested-objects method (with proprietary Internet Explorer conditional comments) [ http://www.alistapart.com/articles/flashembedcagematch/ ] to ensure the most optimal cross-browser support by means of markup only, while being standards compliant and supporting alternative content [ http://www.swffix.org/testsuite/ ]:
 
 {{{
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

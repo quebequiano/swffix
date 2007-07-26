@@ -1,0 +1,84 @@
+#summary Embedding Adobe Flash content using SWFFix
+
+== Why should you use SWFFix? ==
+
+The A List Apart article Flash Embedding Cage Match [ http://www.alistapart.com/articles/flashembedcagematch/ ] describes the rationale behind SWFFix and why it should be better than any other Flash embed method.
+
+== How to use SWFFix? ==
+
+=== STEP 1: Embed both Flash content and alternative content using standards compliant markup ===
+
+SWFFix' base markup uses the nested-objects method [ http://www.alistapart.com/articles/flashembedcagematch/ ] (with proprietary Internet Explorer conditional comments) to ensure the most optimal cross-browser support by means of markup only, and while being standards compliant and supporting alternative content [ http://www.swffix.org/testsuite/ ]:
+
+{{{
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <title>SWFFix - step 1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  </head>
+  <body>
+    <div>
+      <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="780" height="420">
+        <param name="movie" value="myContent.swf" />
+        <!--[if !IE]>-->
+        <object type="application/x-shockwave-flash" data="myContent.swf" width="780" height="420">
+        <!--<![endif]-->
+          <p>Alternative content</p>
+        <!--[if !IE]>-->
+        </object>
+        <!--<![endif]-->
+      </object>
+    </div>
+  </body>
+</html>
+}}}
+
+==== How can you use HTML to configure your Flash content? ====
+
+You can add the following often-used optional attributes [ http://www.w3schools.com/tags/tag_object.asp ] to the object element:
+  * id
+  * name
+  * class
+  * align
+
+Please note that we advise not to use the `codebase` attribute to point to the URL of the Flash plugin installer on Adobe's servers, because this is illegal according to the specifications which restrict its access to the domain of the current document only. We recommend the use of alternative content with a subtle message that a user can have a richer experience by downloading the Flash plugin instead.
+
+You can use the following optional Flash specific param elements [ http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_12701 ]:
+  * play
+  * loop
+  * menu
+  * quality
+  * scale
+  * salign
+  * wmode
+  * bgcolor
+  * base
+  * swliveconnect
+  * flashvars
+  * devicefont [ http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_13331 ]
+  * allowscriptaccess [ http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_16494 ]
+  * seamlesstabbing [ http://www.adobe.com/support/documentation/en/flashplayer/7/releasenotes.html ]
+  * allowfullscreen [ http://www.adobe.com/devnet/flashplayer/articles/full_screen_mode.html ]
+  * allownetworking [ http://livedocs.adobe.com/flash/9.0/main/00001079.html ]
+
+==== Why should you use alternative content? ====
+
+The object element allows you to nest alternative content inside of it, which will be displayed if Flash is not installed or supported. This content will also be picked up by search engines, making it a great tool for creating search-engine-friendly content. Summarizing, you should use alternative content when you like to create content that is accessible for people who browse the Web without plugins [ http://www.adobe.com/devnet/flash/articles/progressive_enhancement_03.html ], create search-engine-friendly content [ http://www.adobe.com/devnet/flash/articles/progressive_enhancement_04.html ] or tell visitors that they can have a richer user experience by downloading the Flash plugin.
+
+==== What are the downsides of the nested-objects method? ====
+
+When you take a close look at the cross-browser support of this markup approach, you will find the following deficiencies:
+  * Safari 1.2.2 and lower will ignore all nested param elements
+  * Internet Explorer 6+ on Windows XP SP2+ and Opera 9+ will include a click-to-activate mechanism
+  * There is a risk that an outdated Flash player will run your Flash content with the possibility of broken or no content at all
+
+The SWFFix JavaScript library will attempt to solve these issues. You can best see it an add-on, which primary goals are to fix issues of using standards compliant markup and to add functionality to improve the user experience.
+
+
+
+
+
+
+
+

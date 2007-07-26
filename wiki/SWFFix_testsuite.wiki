@@ -1,0 +1,8 @@
+#labels Featured
+1. Basic example [ http://www.swffix.org/documentation/test.html ]
+2. Parameters test page [ http://www.swffix.org/documentation/test_params.html ]
+3. Streaming Flash content test page [ http://www.swffix.org/documentation/test_streaming.html ]
+4. Browser communication test page [ http://www.swffix.org/documentation/test_com.html ]
+5. Embedding multiple SWFs [ http://www.swffix.org/documentation/test_multiple.html ]
+6. Dynamic publishing example [ http://www.swffix.org/documentation/test_dynamic.html ]
+7. DomLoad test page [ http://www.swffix.org/documentation/test_domload.html ]

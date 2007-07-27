@@ -10,4 +10,4 @@
   # Embedding multiple SWFs [ http://www.swffix.org/documentation/test_multiple.html ]
   # Dynamic publishing example [ http://www.swffix.org/documentation/test_dynamic.html ]
   # DomLoad test page [ http://www.swffix.org/documentation/test_domload.html ]
-
+  # Full browser Flash test page [ http://www.swffix.org/documentation/test_fullbrowserflash.html ]

@@ -3,9 +3,22 @@
 
 == Why should you use SWFFix? ==
 
-The A List Apart article Flash Embedding Cage Match [ http://www.alistapart.com/articles/flashembedcagematch/ ] describes the rationale behind SWFFix and why it should be better than any other Flash embed method.
+The A List Apart article Flash Embedding Cage Match [ http://www.alistapart.com/articles/flashembedcagematch/ ] describes the rationale behind SWFFix and why it should be better than any other available Flash embed method.
 
 == How to use SWFFix? ==
+
+SWFFix offers two ways to embed Flash content:
+  # Embed Flash content using standards compliant markup, and use SWFFix to resolve the issues that markup alone cannot solve
+  # Use SWFFix to dynamically embed Flash content (similar like SWFObject and UFO)
+
+The advantage of the first method over the second is that the actual authoring of standards compliant markup is promoted and that the mechanism of inserting Flash content doesn't rely on JavaScript anymore, so it degrades properly:
+  * If you have the Flash plug-in installed, but have JavaScript disabled or a use a browser that doesn't support JavaScript, you will still be able to see your Flash content
+  * Flash will now also run on a device like Sony PSP, which has very poor JavaScript support
+  * Automated tools like RSS readers are able to pick up Flash content 
+
+The advantage of the second method over the first is that it is easier to author, because it is less verbose and it contains no redundant code.
+
+== How to embed Flash content using standards compliant markup and use SWFFix to solve its issues? (option 1) ==
 
 === STEP 1: Embed both Flash content and alternative content using standards compliant markup ===
 
@@ -37,6 +50,12 @@ SWFFix' base markup uses the nested-objects method (with proprietary Internet Ex
 </html>
 }}}
 
+Note 1: The nested-objects method requires a double `object` definition (the outer `object` targeting Internet Explorer and the inner `object` targeting all other browsers), so you need to define your `object` attributes and nested `param` elements twice.
+
+Note 2: The `id` and `classid` attributes, and the `movie` `param` element should be used for the outer `object` only. The `type` and `data` attributes should be used by the inner `object` only.
+
+Note 3: We advise not to use the `codebase` attribute to point to the URL of the Flash plugin installer on Adobe's servers, because this is illegal according to the specifications which restrict its access to the domain of the current document only. We recommend the use of alternative content with a subtle message that a user can have a richer experience by downloading the Flash plugin instead.
+
 ==== How can you use HTML to configure your Flash content? ====
 
 You can add the following often-used optional attributes [ http://www.w3schools.com/tags/tag_object.asp ] to the `object` element:
@@ -44,8 +63,6 @@ You can add the following often-used optional attributes [ http://www.w3schools.
   * `name`
   * `class`
   * `align`
-
-Please note that we advise not to use the `codebase` attribute to point to the URL of the Flash plugin installer on Adobe's servers, because this is illegal according to the specifications which restrict its access to the domain of the current document only. We recommend the use of alternative content with a subtle message that a user can have a richer experience by downloading the Flash plugin instead.
 
 You can use the following optional Flash specific `param` elements [ http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_12701 ]:
   * `play`
@@ -147,37 +164,19 @@ First add a unique `id` to the outer `object` tag that defines your Flash conten
 </html>
 }}} 
 			
-== How to embed multiple SWF files into one HTML page? ==
+== How to embed multiple SWF files into one HTML page (using option 1)? ==
 
-Just repeat steps 1 and 3 (As mentioned under "How to use SWFFix?") to add as many SWF files to your page as you like.
-			
-== How can you use SWFFix to retrieve Flash player related information with JavaScript? ==
+Just repeat steps 1 and 3 (As mentioned under option 1: "How to embed Flash content using standards compliant markup and use SWFFix to solve its issues?") to add as many SWF files to your page as you like.
 
-SWFFix contains a public API that enables you to retrieve Flash player related information with JavaScript. `SWFFix.getFlashPlayerVersion()` returns a JavaScript object containing the major version (`major`:Number), minor version (`minor`:Number) and release version (`release`:Number) of an installed Flash player:
+== How to use SWFFix to dynamically embed Flash content? (option 2) ==
 
-{{{
-var playerVersion = SWFFix.getFlashPlayerVersion(); // returns a JavaScript object
-var majorVersion = playerVersion.major; // access the major, minor and release version numbers via their respective properties
-}}}
+SWFFix contains a public API that enables you to embed SWF files with JavaScript by defining the `object`'s attributes, nested `param` elements and the HTML element that you would like to have replaced.
 
-`SWFFix.hasFlashPlayerVersion(versionNumbersString)` returns a Boolean to indicate whether or not a specific version of the Flash plugin is installed:
+`SWFFix.createSWF(attributeObj, paramObj, toBeReplacedElem)` requires three arguments. The first is a JavaScript object that contains the `object`'s attributes in name:value pairs, the second is a JavaScript object that contains the object's nested `param` elements in name:value pairs, and the third a reference to an HTML element that you would like to have replaced when enough Flash and JavaScript support is available.
 
-{{{
-if (SWFFix.hasFlashPlayerVersion("9.0.18")) {
-  // has Flash
-}
-else {
-  // no Flash
-}
-}}}
+Note 1: There is no need to define the `classid`, `type` and `codebase` attributes and `movie` `param` element.
 
-Please note that while Flash version numbers normally consist of major.minor.release.build, SWFFix only looks at the first 3 numbers, so both "WIN 9,0,18,0" (IE) or "Shockwave Flash 9 r18" (all other browsers) will translate to "9.0.18".
-
-== How can you use SWFFix to dynamically embed SWF files with JavaScript? ==
-
-SWFFix contains a public API that enables you to embed SWF files with JavaScript by defining the `object`'s attributes, nested `param` elements and the HTML element that you want to have replaced. `SWFFix.createSWF(attributeObj, paramObj, toBeReplacedElem)` requires three arguments. The first is a JavaScript object that contains the `object`'s attributes in name:value pairs, the second is a JavaScript object that contains the object's nested `param` elements in name:value pairs, and the third a reference to an HTML element that you would like to have replaced when enough Flash and JavaScript support is available.
-
-Because this embed metod utilizes JavaScript to dynamically embed a SWF file, you don't have to define the Internet Explorer specific `classid` attribute and `movie` `param` element anymore. Please also note that this function can only be called when a page's DOM is available. Fortunately the SWFFix API allows you to reuse its DomLoad mechanism. `SWFFix.addDomLoadEvent(fn)` enables you to execute functions as soon as the a page's DOM is available.
+Note 2: `SWFFix.createSWF(attributeObj, paramObj, toBeReplacedElem)` can only be called when a page's DOM is available. Fortunately the SWFFix API allows you to reuse its DomLoad mechanism. `SWFFix.addDomLoadEvent(fn)` enables you to execute functions as soon as the a page's DOM is available.
 
 The following example shows how you can use the SWFFix public API to dynamically embed a SWF file:
 
@@ -210,17 +209,59 @@ The following example shows how you can use the SWFFix public API to dynamically
 </html>
 }}}
 
+== How to embed multiple SWF files into one HTML page (using option 2)? ==
+
+Just create as many `SWFFix.createSWF(attributeObj, paramObj, toBeReplacedElem)` calls as you like.
+		
+== How can you use SWFFix to retrieve Flash player related information with JavaScript? ==
+
+SWFFix contains a public API that enables you to retrieve Flash player related information with JavaScript.
+
+`SWFFix.getFlashPlayerVersion()` returns a JavaScript object containing the major version (`major`:Number), minor version (`minor`:Number) and release version (`release`:Number) of an installed Flash player:
+
+{{{
+var playerVersion = SWFFix.getFlashPlayerVersion(); // returns a JavaScript object
+var majorVersion = playerVersion.major; // access the major, minor and release version numbers via their respective properties
+}}}
+
+`SWFFix.hasFlashPlayerVersion(versionNumbersString)` returns a Boolean to indicate whether or not a specific version of the Flash plugin is installed:
+
+{{{
+if (SWFFix.hasFlashPlayerVersion("9.0.18")) {
+  // has Flash
+}
+else {
+  // no Flash
+}
+}}}
+
+Please note that while Flash version numbers normally consist of major.minor.release.build, SWFFix only looks at the first 3 numbers, so both "WIN 9,0,18,0" (IE) or "Shockwave Flash 9 r18" (all other browsers) will translate to "9.0.18".
+
 == How does SWFFix differ from libraries like SWFObject and UFO? ==
 
-SWFFix' architecture departs from the architecture of both SWFObject and UFO, which are built on top of marked up alternative content only. The advantages of this new method are that the actual authoring of standards compliant markup is promoted and that the mechanism of inserting Flash content doesn't rely on JavaScript anymore, so it degrades properly:
+Embed option 2 (as described under "How to use SWFFix?") works similar as SWFObject and UFO, and uses JavaScript to dynamically replace marked up alternative content by Flash content.
+
+Embed option 1 departs from this conceptual principle by using standards compliant markup  to embed Flash content and use JavaScript to solve issues that cannot be solved by markup alone. The advantages of this new method are that the actual authoring of standards compliant markup is promoted and that the mechanism of inserting Flash content doesn't rely on JavaScript anymore, so it degrades properly:
   * If you have the Flash plug-in installed, but have JavaScript disabled or a use a browser that doesn't support JavaScript, you will still be able to see your Flash content
   * Flash will now also run on a device like Sony PSP, which has very poor JavaScript support
   * Automated tools like RSS readers are able to pick up Flash content
+
+The advantage of the second option over the first is that it is easier to author, because it is less verbose and it contains no redundant code.
 			
 == What are the risks of using SWFFix? ==
+
+=== When using embed option 1 ===
 
 Users that have JavaScript disabled or have browsers that don't support JavaScript at all or not well enough may face a degraded user experience caused by active content or in the worst case, broken Flash content. Let's calculate the odds:
   * 4% of all web users have no JavaScript support or have JavaScript disabled (source: thecounter.com [ http://www.thecounter.com/stats/2007/June/javas.php ]). When you consider that IE6, IE7 and Opera have a market share of around 80% [ http://www.thecounter.com/stats/2007/June/browser.php ], you can do the math that there is a risk of 3.2% (4% of 80%) on a degraded user experience (having to click to activate active content).
   * When you publish your Flash content for Flash player version 8 and a user has Flash Player 6 installed, there is a 0.2% (around 5% version gap of 4% no JavaScript) chance on broken or no content at all. When you publish your Flash content for Flash player version 8 and a user has Flash Player 7 installed this chance is already reduced to 0.1% (source: Adobe [ http://www.adobe.com/products/player_census/flashplayer/version_penetration.html ]).
 
 Please note that although this approach still has its risks, the odds will be equal or lower than any other Flash embed method available.
+
+=== When using embed option 2 ===
+
+Users that have JavaScript disabled or have browsers that don't support JavaScript at all, will never be able to see any Flash content at all (regardless whether the latest Flash player is installed or not), however they will see alternative content instead. The odds:
+  * 4% of all web users have no JavaScript support or have JavaScript disabled (source: thecounter.com [ http://www.thecounter.com/stats/2007/June/javas.php ]).
+
+
+

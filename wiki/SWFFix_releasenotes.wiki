@@ -10,8 +10,8 @@
 This version includes the following changes:
 
   # The API got an overhaul to optimize the library’s usability. It is more simplified and looks like:
-    * SWFFix.registerObject(objectIdStr, swfVersionStr, xiSwfUrlStr); [We removed the object notation.]
-    * SWFFix.embedSWF(swfUrlStr, replaceElemIdStr, widthStr, heightStr, swfVersionStr, xiSwfUrlStr, flashvarsObj, parObj, attObj); [Is new and replaces the previous dynamic embed method. It now also supports express install and is closer to the SWFObject/UFO notation.]
+    * SWFFix.registerObject(objectIdStr, swfVersionStr, xiSwfUrlStr); [ We removed the object notation. ]
+    * SWFFix.embedSWF(swfUrlStr, replaceElemIdStr, widthStr, heightStr, swfVersionStr, xiSwfUrlStr, flashvarsObj, parObj, attObj); [ Is new and replaces the previous dynamic embed method. It now also supports express install and is closer to the SWFObject/UFO notation. ]
     * SWFFix.getFlashPlayerVersion();
     * SWFFix.hasFlashPlayerVersion(versionStr);
   # We compressed the library (with Dojo Shrinksafe: [ http://alex.dojotoolkit.org/shrinksafe/ ]) for file size optimization, and created a SRC directory that includes the uncompressed library (for means of development) and express install source files
@@ -20,4 +20,3 @@ This version includes the following changes:
 === Version 0.2 public alpha ===
 
 *Release date: July 25th, 2007*
-

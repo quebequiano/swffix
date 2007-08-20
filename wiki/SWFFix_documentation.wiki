@@ -97,7 +97,7 @@ The SWFFix JavaScript library will attempt to solve these issues. You can best s
 
 === STEP 2: Include the SWFFix JavaScript library in the head of your HTML page ===
 
-The SWFFix library consists of one external JavaScript file (currently 12Kb, GZIPed 3.4Kb). SWFFix will be executed as soon as it is read and will perform all DOM manipulations as soon as the DOM is loaded - for all browsers that support this, like IE, Firefox, Safari and Opera 9+ - or otherwise as soon as the onload event fires:
+The SWFFix library consists of one external JavaScript file (currently 9.6Kb, GZIPed 3.2Kb). SWFFix will be executed as soon as it is read and will perform all DOM manipulations as soon as the DOM is loaded - for all browsers that support this, like IE, Firefox, Safari and Opera 9+ - or otherwise as soon as the onload event fires:
 	
 {{{
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -128,9 +128,10 @@ The SWFFix library consists of one external JavaScript file (currently 12Kb, GZI
 			
 === STEP 3: Register your Flash content with the SWFFix library and tell SWFFix what to do with it ===
 
-First add a unique `id` to the outer `object` tag that defines your Flash content. Second add the `SWFFix.registerObject` method, which first argument should contain the same value as the `id` used in the markup, and which second argument is a JavaScript object that can contain two optional name:value pairs:
-  * The `swfversion` parameter activates the Flash version detection for a SWF to determine whether to show Flash content or force alternative content by doing a DOM manipulation. While Flash version numbers normally consist of major.minor.release.build, SWFFix only looks at the first 3 numbers, so both "WIN 9,0,18,0" (IE) or "Shockwave Flash 9 r18" (all other browsers) will translate to "9.0.18".
-  * You can use the `expressinstall` parameter to set the URL of your express install SWF file and to activate Adobe express install [ http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=6a253b75 ]. Express install displays a standardized Flash plugin download dialog instead of your Flash content when the required plugin version is not available. A default expressInstall.swf file is packaged with the project. It also contains the corresponding expressInstall.fla and AS files to let you create your own custom express install experience.
+First add a unique `id` to the outer `object` tag that defines your Flash content. Second add the `SWFFix.registerObject` method:
+  # The first argument (String, required) specifies the `id` used in the markup.
+  # The second argument (String, optional) specifies the Flash player version your content is published for. When used it activates the Flash version detection for a SWF to determine whether to show Flash content or force alternative content by doing a DOM manipulation. While Flash version numbers normally consist of major.minor.release.build, SWFFix only looks at the first 3 numbers, so both "WIN 9,0,18,0" (IE) or "Shockwave Flash 9 r18" (all other browsers) will translate to "9.0.18".
+  # The third argument (String, optional) can be used to activate Adobe express install [ http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=6a253b75 ] and specifies the URL of your express install SWF file. Express install displays a standardized Flash plugin download dialog instead of your Flash content when the required plugin version is not available. A default expressInstall.swf file is packaged with the project. It also contains the corresponding expressInstall.fla and AS files (in the SRC directory) to let you create your own custom express install experience.
 	
 {{{
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -141,7 +142,7 @@ First add a unique `id` to the outer `object` tag that defines your Flash conten
     <script type="text/javascript" src="swffix.js"></script>
 
     <script type="text/javascript">
-    SWFFix.registerObject("myId", {swfversion:"9.0.0", expressinstall:"expressInstall.swf"});
+    SWFFix.registerObject("myId", "9.0.0", "expressInstall.swf");
     </script>
 
   </head>
@@ -170,48 +171,220 @@ Just repeat steps 1 and 3 (As mentioned under option 1: "How to embed Flash cont
 
 == How to use SWFFix to dynamically embed Flash content? (option 2) ==
 
-SWFFix contains a public API that enables you to embed SWF files with JavaScript by defining the `object`'s attributes, nested `param` elements and the HTML element that you would like to have replaced.
+=== STEP 1: Create alternative content using standards compliant markup ===
 
-`SWFFix.createSWF(attributeObj, paramObj, toBeReplacedElem)` requires three arguments. The first is a JavaScript object that contains the `object`'s attributes in name:value pairs, the second is a JavaScript object that contains the object's nested `param` elements in name:value pairs, and the third a reference to an HTML element that you would like to have replaced when enough Flash and JavaScript support is available.
-
-Note 1: There is no need to define the `classid`, `type` and `codebase` attributes and `movie` `param` element.
-
-Note 2: `SWFFix.createSWF(attributeObj, paramObj, toBeReplacedElem)` can only be called when a page's DOM is available. Fortunately the SWFFix API allows you to reuse its DomLoad mechanism. `SWFFix.addDomLoadEvent(fn)` enables you to execute functions as soon as the a page's DOM is available.
-
-The following example shows how you can use the SWFFix public API to dynamically embed a SWF file:
+SWFFix' dynamic embed method follows the principle of progressive enhancement [ http://www.adobe.com/devnet/flash/articles/progressive_enhancement.html ] and replaces alternative HTML content for Flash content when enough JavaScript and Flash plug-in support is available. First define your alternative content and label it with an `id`: 
 
 {{{
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
   <head>
-    <title>SWFFix - dynamic publishing example</title>
+    <title>SWFFix dynamic embed - step 1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    
-    <script type="text/javascript" src="swffix.js"></script>
-    <script type="text/javascript">
-    if (SWFFix.hasFlashPlayerVersion("6.0.0")) {
-      var fn = function() {
-        var att = { data:"test6.swf", width:"300", height:"120" };
-        var par = { flashvars:"foo=bar" };
-        var el = document.getElementById("replaceMe");
-        SWFFix.createSWF(att, par, el);
-      };
-      SWFFix.addDomLoadEvent(fn);
-    }
-    </script>
-
   </head>
   <body>
-
-    <div id="replaceMe">Alternative content</div>
-
+    
+    <div id="myContent">
+      <p>Alternative content</p>
+    </div>
+    
   </body>
 </html>
 }}}
 
+=== STEP 2: Include the SWFFix JavaScript library in the head of your HTML page ===
+
+The SWFFix library consists of one external JavaScript file (currently 9.6Kb, GZIPed 3.2Kb). SWFFix will be executed as soon as it is read and will perform all DOM manipulations as soon as the DOM is loaded - for all browsers that support this, like IE, Firefox, Safari and Opera 9+ - or otherwise as soon as the onload event fires:
+	
+{{{
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <title>SWFFix dynamic embed - step 2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  
+    <script type="text/javascript" src="swffix.js"></script>
+
+  </head>
+  <body>
+    <div id="myContent">
+      <p>Alternative content</p>
+    </div>
+  </body>
+</html>
+}}} 
+
+=== STEP 3: Embed your SWF with JavaScript ===
+
+`SWFFix.embedSWF(swfUrl, id, width, height, version, expressInstallSwfurl, flashvars, params, attributes)` has five required and four optional arguments:
+  # swfUrl (String, required) specifies the URL of your SWF
+  # id (String, required) specifies the `id` of the HTML element (containing your alternative content) you would like to have replaced by your Flash content
+  # width (String, required) specifies the width of your SWF
+  # height (String, required) specifies the height of your SWF
+  # version (String, required) specifies the Flash player version your SWF is published for (format is: "major.minor.release")
+  # expressInstallSwfurl (String, optional) specifies the URL of your express install SWF and activates Adobe express install [ http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=6a253b75 ] 
+  # flashvars (Object, optional) specifies your flashvars with name:value pairs 
+  # params (Object, optional) specifies your nested `object` element `params` with name:value pairs 
+  # attributes (Object, optional) specifies your `object`'s attributes with name:value pairs 
+
+{{{
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <title>SWFFix dynamic embed - step 3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <script type="text/javascript" src="swffix.js"></script>
+    
+    <script type="text/javascript">
+    SWFFix.embedSWF("myContent.swf", "myContent", "300", "120", "9.0.0");
+    </script>
+
+  </head>
+  <body>
+    <div id="myContent">
+      <p>Alternative content</p>
+    </div>
+  </body>
+</html>
+}}}
+
+==== How can you configure your Flash content? ====
+
+You can add the following often-used optional attributes [ http://www.w3schools.com/tags/tag_object.asp ] to the `object` element:
+  * `id`
+  * `name`
+  * `class`
+  * `align`
+
+You can use the following optional Flash specific `param` elements [ http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_12701 ]:
+  * `play`
+  * `loop`
+  * `menu`
+  * `quality`
+  * `scale`
+  * `salign`
+  * `wmode`
+  * `bgcolor`
+  * `base`
+  * `swliveconnect`
+  * `flashvars`
+  * `devicefont` [ http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_13331 ]
+  * `allowscriptaccess` [ http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_16494 ]
+  * `seamlesstabbing` [ http://www.adobe.com/support/documentation/en/flashplayer/7/releasenotes.html ]
+  * `allowfullscreen` [ http://www.adobe.com/devnet/flashplayer/articles/full_screen_mode.html ]
+  * `allownetworking` [ http://livedocs.adobe.com/flash/9.0/main/00001079.html ]
+
+==== How do you use JavaScript Objects to define your flashvars, params and object's attributes? ====
+
+You can best define JavaScript Objects using the Object literal notation, which looks like:
+
+{{{
+<script type="text/javascript">
+
+var flashvars = {};
+var params = {};
+var attributes = {};
+
+SWFFix.embedSWF("myContent.swf", "myContent", "300", "120", "9.0.0","expressInstall.swf", flashvars, params, attributes);
+
+</script>
+}}}
+
+You can add your name:value pairs while you define an object (note: please make sure not to put a comma behind the last name:value pair inside an object)
+
+{{{
+<script type="text/javascript">
+
+var flashvars = {
+  name1: "hello",
+  name2: "world",
+  name3: "foobar"
+};
+var params = {
+  menu: "false"
+};
+var attributes = {
+  id: "myDynamicContent",
+  name: "myDynamicContent"
+};
+
+SWFFix.embedSWF("myContent.swf", "myContent", "300", "120", "9.0.0","expressInstall.swf", flashvars, params, attributes);
+
+</script>
+}}}
+
+Or add properties and values after its creation by using a dot notation:
+
+{{{
+<script type="text/javascript">
+
+var flashvars = {};
+flashvars.name1 = "hello";
+flashvars.name2 = "world";
+flashvars.name3 = "foobar";
+
+var params = {};
+params.menu = "false";
+
+var attributes = {};
+attributes.id = "myDynamicContent";
+attributes.name = "myDynamicContent";
+
+SWFFix.embedSWF("myContent.swf", "myContent", "300", "120", "9.0.0","expressInstall.swf", flashvars, params, attributes);
+
+</script>
+}}}
+
+Which can also be written as (the less readable shorthand version for the die-hard scripter who love one-liners):
+
+{{{
+<script type="text/javascript">
+
+SWFFix.embedSWF("myContent.swf", "myContent", "300", "120", "9.0.0","expressInstall.swf", {name1:"hello",name2:"world",name3:"foobar"}, {menu:"false"}, {id:"myDynamicContent",name:"myDynamicContent"});
+
+</script>
+}}}
+
+If you don't want to use an argument you can define it as 'null' or as an empty Object:
+
+{{{
+<script type="text/javascript">
+
+var flashvars = null;
+var params = {};
+var attributes = {
+  id: "myDynamicContent",
+  name: "myDynamicContent"
+};
+
+SWFFix.embedSWF("myContent.swf", "myContent", "300", "120", "9.0.0","expressInstall.swf", flashvars, params, attributes);
+
+</script>
+}}}
+
+The flashvars Object is a shorthand notation that is there for your ease of use. You could potentially ignore it and specify your flashvars via the params Object:
+
+{{{
+<script type="text/javascript">
+
+var flashvars = null;
+var params = {
+  menu: "false",
+  flashvars: "name1=hello&name2=world&name3=foobar"
+};
+var attributes = {
+  id: "myDynamicContent",
+  name: "myDynamicContent"
+};
+
+SWFFix.embedSWF("myContent.swf", "myContent", "300", "120", "9.0.0","expressInstall.swf", flashvars, params, attributes);
+
+</script>
+}}}
+
 == How to embed multiple SWF files into one HTML page (using option 2)? ==
 
-Just create as many `SWFFix.createSWF(attributeObj, paramObj, toBeReplacedElem)` calls as you like.
+Just repeat steps 1 and 3 (As mentioned under option 2: "How to use SWFFix to dynamically embed Flash content?") to add as many SWF files to your page as you like.
 		
 == How can you use SWFFix to retrieve Flash player related information with JavaScript? ==
 
@@ -262,6 +435,5 @@ Please note that although this approach still has its risks, the odds will be eq
 
 Users that have JavaScript disabled or have browsers that don't support JavaScript at all, will never be able to see any Flash content at all (regardless whether the latest Flash player is installed or not), however they will see alternative content instead. The odds:
   * 4% of all web users have no JavaScript support or have JavaScript disabled (source: thecounter.com [ http://www.thecounter.com/stats/2007/June/javas.php ]).
-
 
 

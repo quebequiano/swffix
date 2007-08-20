@@ -97,7 +97,7 @@ The SWFFix JavaScript library will attempt to solve these issues. You can best s
 
 === STEP 2: Include the SWFFix JavaScript library in the head of your HTML page ===
 
-The SWFFix library consists of one external JavaScript file (currently 9.6Kb, GZIPed 3.2Kb). SWFFix will be executed as soon as it is read and will perform all DOM manipulations as soon as the DOM is loaded - for all browsers that support this, like IE, Firefox, Safari and Opera 9+ - or otherwise as soon as the onload event fires:
+The SWFFix library consists of one external JavaScript file (currently 9.8Kb, GZIPed 3.2Kb). SWFFix will be executed as soon as it is read and will perform all DOM manipulations as soon as the DOM is loaded - for all browsers that support this, like IE, Firefox, Safari and Opera 9+ - or otherwise as soon as the onload event fires:
 	
 {{{
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -194,7 +194,7 @@ SWFFix' dynamic embed method follows the principle of progressive enhancement [ 
 
 === STEP 2: Include the SWFFix JavaScript library in the head of your HTML page ===
 
-The SWFFix library consists of one external JavaScript file (currently 9.6Kb, GZIPed 3.2Kb). SWFFix will be executed as soon as it is read and will perform all DOM manipulations as soon as the DOM is loaded - for all browsers that support this, like IE, Firefox, Safari and Opera 9+ - or otherwise as soon as the onload event fires:
+The SWFFix library consists of one external JavaScript file (currently 9.8Kb, GZIPed 3.2Kb). SWFFix will be executed as soon as it is read and will perform all DOM manipulations as soon as the DOM is loaded - for all browsers that support this, like IE, Firefox, Safari and Opera 9+ - or otherwise as soon as the onload event fires:
 	
 {{{
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -435,5 +435,4 @@ Please note that although this approach still has its risks, the odds will be eq
 
 Users that have JavaScript disabled or have browsers that don't support JavaScript at all, will never be able to see any Flash content at all (regardless whether the latest Flash player is installed or not), however they will see alternative content instead. The odds:
   * 4% of all web users have no JavaScript support or have JavaScript disabled (source: thecounter.com [ http://www.thecounter.com/stats/2007/June/javas.php ]).
-
 

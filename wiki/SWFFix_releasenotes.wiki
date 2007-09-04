@@ -15,7 +15,7 @@ This version includes the following changes:
     * SWFFix.getFlashPlayerVersion();
     * SWFFix.hasFlashPlayerVersion(versionStr);
   # We compressed the library (with Dojo Shrinksafe: [ http://alex.dojotoolkit.org/shrinksafe/ ]) for file size optimization, and created a SRC directory that includes the uncompressed library (for means of development) and express install source files
-  # We fixed an express install related bug and now check is a SWF’s height is 137px (instead of the earlier 130px) or higher to avoid Download.Fail status calls to fire
+  # We fixed an express install related bug and now check if a SWF’s height is 137px (instead of the earlier 130px) or higher to avoid Download.Fail status calls to fire
 
 === Version 0.2 public alpha ===
 

@@ -1,5 +1,5 @@
 #summary SWFFix release notes
-#labels Featured
+#labels Deprecated
 
 == SWFFix release notes ==
 

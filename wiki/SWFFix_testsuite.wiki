@@ -1,5 +1,5 @@
 #summary SWFFix test pages (or just study/reuse the source code)
-#labels Featured
+#labels Deprecated
 
 == SWFFix test pages ==
 
